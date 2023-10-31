@@ -1,0 +1,39 @@
+table {
+	width: 100%;
+/* 	border-top: 2px solid #ffd900; */
+/* 	border-bottom: 2px solid #ffd900; */
+}
+
+td {
+	text-align: right;
+}
+
+.buyer_label {
+	display: block;
+	min-width: 100px;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.buyer_info_title {
+	border-bottom: 1px solid white;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+.buyer_name, .buyer_email, .buyer_phone {
+	min-width: calc(100% - 100px);
+}
+
+.buyer_name_box, .buyer_email_box, .buyer_phone_box {
+	display: flex;
+}
+
+.movie_title {
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
+.movie_time {
+	font-size: .7rem;
+}

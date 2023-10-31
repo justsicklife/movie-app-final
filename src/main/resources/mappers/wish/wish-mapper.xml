@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="wishMapper">
+   <select id="selectListCount" resultType="_int">
+      SELECT COUNT(*) FROM wish
+   </select>
+   
+
+   <!-- DTO랑 같음, 근데 얘는 db컬럼이랑 dto맞춰주는거 -->   
+	<resultMap type="wishMember" id="memberResultSet">
+		<result column="MEMBER_NAME" property="member_name"></result>
+		<result column="MEMBER_EMAIL" property="member_email"></result>
+		<result column="MEMBER_ID" property="member_id"></result>
+	</resultMap>      
+	 
+	<resultMap type="Wish" id="wishResultSet">
+	
+		<result column="MOVIE_INDEX" property="movie_index"></result>
+		<result column="MEMBER_INDEX" property="member_index"></result>
+	</resultMap>
+	        
+	<resultMap type="wishMovie" id="movieResultSet">
+		<result column="MOVIE_INDEX" property="movie_index"></result>
+		<result column="MOVIE_TITLE" property="movie_title"></result>
+		<result column="MOVIE_UPLOAD_ORIGIN_NAME" property="movie_upload_origin_name"></result>
+		<result column="MOVIE_PRICE" property="movie_price"></result>
+		<result column="MOVIE_GENRE" property="movie_genre"></result>
+		<result column="MOVIE_RATING" property="movie_rating"></result>
+	</resultMap>
+	        
+	<resultMap type="WishMb" id="cmbResultSet">
+		<collection property="Member" resultMap="memberResultSet"></collection>
+		<collection property="wish" resultMap="wishResultSet"></collection>
+	</resultMap>
+	
+	<resultMap type="WishMv" id="cmvResultSet">
+		<collection property="wish" resultMap="wishResultSet"></collection>
+		<collection property="movie" resultMap="movieResultSet"></collection>
+	</resultMap>
+   
+   <select id="selectListWish" resultMap="cmbResultSet">
+         <!-- SELECT * FROM wish WHERE member_index = #{idx} -->
+         SELECT *
+         FROM wish w
+      	LEFT JOIN MEMBER m1 ON w.MEMBER_INDEX  = m1.MEMBER_INDEX  
+      	WHERE w.member_index = #{idx}
+   </select>
+   
+   <select id="detailWish" resultMap="cmvResultSet">
+         SELECT * 
+         FROM wish w
+      LEFT JOIN MOVIE m2 ON w.MOVIE_INDEX  = m2.MOVIE_INDEX  
+      WHERE w.member_index = #{idx}
+   </select> 
+   
+      <!--  좋아요 삭제  -->
+   <delete id="deleteWish" >
+        DELETE FROM wish
+       WHERE member_index = #{member_index} and movie_index = #{movie_index}
+   </delete>
+
+   <insert id="insertWish">
+      insert into wish
+      (movie_index,member_index) values(#{movie_index},#{member_index})
+   </insert>
+    
+    
+    <select id="checkedWish" resultMap="wishResultSet">
+       SELECT * FROM WISH 
+       WHERE MEMBER_INDEX = #{member_index} and MOVIE_INDEX = #{movie_index}
+    </select>
+</mapper>

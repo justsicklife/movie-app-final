@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="reviewMapper">
+
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM review
+		WHERE review_remove_date IS NULL
+		and movie_index = #{movieIdx}
+	</select>
+
+	<resultMap type="Review" id="reviewResultSet">
+		<result column="review_index" property="reviewIdx"></result>
+		<result column="movie_index" property="movieIdx"></result>
+		<result column="member_index" property="memberIdx"></result>
+		<result column="review_writer" property="reviewWriter"></result>
+		<result column="review_title" property="reviewTitle"></result>
+		<result column="review_content" property="reviewContent"></result>
+		<result column="review_indate" property="reviewInDate"></result>
+		<result column="review_remove_date" property="reviewDelDate"></result>
+	</resultMap>
+	
+	<select id="selectListAll" resultMap="reviewResultSet">
+		SELECT * FROM review
+		WHERE review_remove_date IS NULL
+		and movie_index = #{movieIdx}
+		ORDER BY review_index DESC
+	</select>
+	
+	<insert id="insertReview" parameterType="Review">
+		INSERT INTO review (
+								review_index,
+								movie_index,
+								member_index,
+								review_writer,
+								review_title,
+								review_content,
+								review_indate
+								)
+						VALUES (
+								seq_review_idx.nextval,
+								#{movieIdx},
+								#{memberIdx},
+								#{reviewWriter},
+								#{reviewTitle},
+								#{reviewContent},
+								sysdate
+								)
+	</insert>
+	
+	<update id="updateReview" parameterType="Review">
+		UPDATE review SET review_content = #{reviewContent},
+							review_title = #{reviewTitle}
+							WHERE review_index = #{reviewIdx}
+	</update>
+		
+	<delete id="deleteReview" parameterType="Review">
+		UPDATE review SET review_remove_date = SYSDATE
+							WHERE review_index = #{reviewIdx}
+	</delete>
+	
+</mapper>

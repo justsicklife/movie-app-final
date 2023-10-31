@@ -1,0 +1,11 @@
+.rounded-table {
+	border-radius: 5px;
+	/* 원하는 반지름 값으로 조정 가능 */
+	overflow: hidden;
+	/* 내용이 모서리를 벗어나지 않도록 설정 */
+}
+
+/* 아이콘 버튼의 스타일 조정 */
+.rounded-table .input-group .btn {
+	border-radius: 0 5px 5px 0;
+}

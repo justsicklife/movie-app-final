@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="commentMapper">
+
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM b_comment
+		WHERE b_comment_remove_date IS NULL
+		AND board_index = #{boardIdx}
+	</select>
+
+	<resultMap type="Comment" id="commentResultSet">
+		<result column="b_comment_index" property="commentIdx"></result>
+		<result column="board_index" property="boardIdx"></result>
+		<result column="member_index" property="memberIdx"></result>
+		<result column="b_comment_content" property="commentContent"></result>
+		<result column="b_comment_indate" property="commentInDate"></result>
+		<result column="b_comment_remove_date" property="commentDelDate"></result>
+		<result column="b_comment_writer" property="commentWriter"></result>
+	</resultMap>
+	
+	<select id="selectListAll" resultMap="commentResultSet">
+		SELECT * FROM b_comment
+		WHERE b_comment_remove_date IS NULL
+		AND board_index = #{boardIdx}
+		ORDER BY b_comment_index DESC
+	</select>
+	
+	<insert id="insertComment" parameterType="Comment">
+		INSERT INTO b_comment (
+								b_comment_index,
+								board_index,
+								member_index,
+								b_comment_content,
+								b_comment_indate,
+								b_comment_writer
+								)
+						VALUES (
+								seq_movie_idx.nextval,
+								#{boardIdx},
+								#{memberIdx},
+								#{commentContent},
+								SYSDATE,
+								#{commentWriter}
+								)
+	</insert>
+	
+	<update id="updateComment" parameterType="Comment">
+		UPDATE b_comment SET b_comment_content = #{commentContent}
+							WHERE b_comment_index = #{commentIdx}
+	</update>
+	
+	
+	<delete id="deleteComment" parameterType="Comment"> 
+		UPDATE b_comment SET b_comment_remove_date = SYSDATE
+								WHERE b_comment_index = #{commentIdx}
+	</delete>
+	
+</mapper>

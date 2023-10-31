@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="staffMapper">
+
+	<!-- DTO랑 같음, 근데 얘는 db컬럼이랑 dto맞춰주는거 -->
+	<resultMap type="staff" id="staffResultSet">
+		<result column="STAFF_INDEX" property="staffIdx"></result>
+		<result column="STAFF_NAME" property="staffName"></result>
+		<result column="STAFF_SEX" property="staffSex"></result>
+		<result column="STAFF_BIRTH" property="staffBirth"></result>
+		<result column="STAFF_ROLE" property="staffRole"></result>
+		<result column="STAFF_UPLOAD_PATH" property="staffUploadPath"></result>
+		<result column="STAFF_UPLOAD_NAME" property="staffUploadName"></result>
+		<result column="STAFF_UPLOAD_ORIGIN_NAME" property="staffUploadOriginName"></result>
+		<result column="STAFF_SUMMARY" property="staffSummary"></result>
+	</resultMap>
+
+	<insert id="insertStaff" parameterType="staff">
+		INSERT INTO STAFF (
+		STAFF_INDEX,
+		STAFF_NAME,
+		STAFF_SEX,
+		STAFF_BIRTH,
+		STAFF_ROLE,
+		STAFF_UPLOAD_PATH,
+		STAFF_UPLOAD_NAME,
+		STAFF_UPLOAD_ORIGIN_NAME,
+		STAFF_SUMMARY
+		) VALUES(
+		seq_staff_idx.nextval,
+		#{staffName},
+		#{staffSex},
+		#{staffBirth},
+		#{staffRole},
+		#{staffUploadPath},
+		#{staffUploadName},
+		#{staffUploadOriginName},
+		#{staffSummary}
+		)
+	</insert>
+
+	<select id="selectStaffAll" resultMap="staffResultSet">
+		SELECT * FROM STAFF
+	</select>
+
+	<select id="selectStaffById" resultMap="staffResultSet">
+		SELECT * FROM STAFF WHERE STAFF_INDEX = #{staffIdx}
+	</select>
+
+</mapper>

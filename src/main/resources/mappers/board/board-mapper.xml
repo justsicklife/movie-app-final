@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="boardMapper">
+
+	<select id="selectListCountAll" resultType="_int">
+		SELECT COUNT(*) FROM board
+		WHERE board_remove_date IS NULL
+		AND board_title LIKE '%' || #{searchText} || '%'
+	</select>
+	
+	<select id="selectListCountCtg" resultType="_int">
+		SELECT COUNT(*) FROM board
+		WHERE board_remove_date IS NULL
+		AND board_category = #{category}
+		AND board_title LIKE '%' || #{searchText} || '%'
+	</select>
+
+	<resultMap type="Board" id="boardResultSet">
+		<result column="board_index" property="boardIdx"></result>
+		<result column="member_index" property="boardMemberIdx"></result>
+		<result column="board_title" property="boardTitle"></result>
+		<result column="board_content" property="boardContent"></result>
+		<result column="board_indate" property="boardInDate"></result>
+		<result column="board_remove_date" property="boardDelDate"></result>
+		<result column="board_writer" property="boardWriter"></result>
+		<result column="board_category" property="boardCategory"></result>
+		<result column="board_upload_path" property="uploadPath"></result>
+		<result column="board_upload_name" property="fileName"></result>
+		<result column="board_upload_origin_name" property="originalName"></result>
+		<result column="board_views" property="boardViews"></result>
+	</resultMap>
+	
+	<select id="selectListAll" resultMap="boardResultSet">
+		SELECT * FROM board
+		WHERE board_remove_date IS NULL
+		AND board_title LIKE '%' || #{searchText} || '%'
+		ORDER BY board_index DESC
+	</select>
+	
+	<select id="selectListCtg" resultMap="boardResultSet">
+		SELECT * FROM board
+		WHERE board_remove_date IS NULL
+		AND board_category = #{category}
+		AND board_title LIKE '%' || #{searchText} || '%'
+		ORDER BY board_index DESC
+	</select>
+	
+	<select id="selectListNotice" resultMap="boardResultSet">
+		SELECT *
+		FROM (
+		    SELECT ROW_NUMBER() OVER(ORDER BY fb.board_INDEX DESC) row_num, fb.*
+		    FROM board fb
+		    WHERE board_category = '공지사항'
+		    AND fb.board_REMOVE_DATE IS NULL
+		) subquery
+		WHERE subquery.row_num = 1
+	</select>
+	
+	<insert id="insertBoard" parameterType="Board">
+		INSERT INTO board (
+								board_index,
+								member_index,
+								board_title,
+								board_content,
+								board_indate,
+								board_writer,
+								board_category,
+								board_upload_path,
+								board_upload_name,
+								board_upload_origin_name
+								)
+						VALUES (
+								seq_board_idx.nextval,
+								#{boardMemberIdx},
+								#{boardTitle},
+								#{boardContent},
+								SYSDATE,
+								#{boardWriter},
+								#{boardCategory},
+								#{uploadPath},
+								#{fileName},
+								#{originalName}
+								)
+	</insert>
+	
+	<select id="detailBoard" resultMap="boardResultSet">
+		SELECT * FROM board
+		WHERE board_index = #{boardIdx}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="viewsBoard" parameterType="Board">
+		UPDATE board SET board_views = #{boardViews}
+		WHERE board_index = #{boardIdx}
+	</update>
+	
+	<update id="updateBoard" parameterType="Board">
+		UPDATE board SET board_title = #{boardTitle},
+								board_content = #{boardContent},
+								board_category = #{boardCategory}
+						WHERE board_index = #{boardIdx}
+	</update>
+	
+	<update id="updateUploadBoard" parameterType="Board">
+		UPDATE board SET board_title = #{boardTitle},
+								board_content = #{boardContent},
+								board_category = #{boardCategory},
+								board_upload_path = #{uploadPath},
+								board_upload_name = #{fileName},
+								board_upload_origin_name = #{originalName}
+						WHERE board_index = #{boardIdx}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="Board">
+		UPDATE board SET board_remove_date = SYSDATE
+		WHERE board_index = #{boardIdx}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="movieMapper">
+
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM movie
+		WHERE movie_title LIKE '%' || #{searchMovie} || '%'
+	</select>
+
+	<resultMap type="Movie" id="movieResultSet">
+		<result column="movie_index" property="movieIdx"></result>
+		<result column="movie_title" property="movieTitle"></result>
+		<result column="movie_director" property="movieDirector"></result>
+		<result column="movie_summary" property="movieSummary"></result>
+		<result column="movie_open_date" property="movieOpenDate"></result>
+		<result column="movie_upload_path" property="movieUploadPath"></result>
+		<result column="movie_upload_name" property="movieUploadName"></result>
+		<result column="movie_upload_origin_name" property="movieUploadOriginName"></result>
+		<result column="movie_trailer" property="movieTrailer"></result>
+		<result column="movie_genre" property="movieGenre"></result>
+		<result column="movie_price" property="moviePrice"></result>
+		<result column="movie_rating" property="movieRating"></result>
+		<result column="movie_like" property="movieLike"></result>
+	</resultMap>
+	
+	<select id="selectListAll" resultMap="movieResultSet">
+		SELECT * FROM movie
+		WHERE movie_title LIKE '%' || #{searchMovie} || '%'
+		ORDER BY movie_index DESC
+	</select>
+	
+	<select id="detailMovie" resultMap="movieResultSet">
+		SELECT * FROM movie
+		WHERE movie_index = #{movieIdx}
+	</select>
+
+   <insert id="insertMovie" parameterType="Movie">
+   		INSERT INTO movie (
+   			MOVIE_INDEX,
+   			MOVIE_TITLE,
+   			MOVIE_DIRECTOR,
+   			MOVIE_SUMMARY,
+   			MOVIE_OPEN_DATE,
+   			MOVIE_UPLOAD_PATH,
+   			MOVIE_UPLOAD_NAME,
+   			MOVIE_UPLOAD_ORIGIN_NAME,
+   			MOVIE_TRAILER,
+   			MOVIE_GENRE,
+   			MOVIE_PRICE,
+   			MOVIE_RATING
+   		) VALUES(
+   			seq_movie_idx.nextval,
+   			#{movieTitle},
+   			#{movieDirector},
+   			#{movieSummary},
+   			#{movieOpenDate},
+   			#{movieUploadPath},
+   			#{movieUploadName},
+   			#{movieUploadOriginName},
+   			#{movieTrailer},
+   			#{movieGenre},
+   			#{moviePrice},
+   			#{movieRating}
+   		)
+   </insert>
+   
+   <select id="selectMovieId" resultType="_int">
+   		SELECT MOVIE_INDEX FROM movie
+   		WHERE movie_title = #{movieTitle} AND movie_director = #{movieDirector}
+   </select>
+
+	<select id="selectMovieById" resultMap="movieResultSet">
+		SELECT * FROM MOVIE WHERE MOVIE_INDEX = #{movieIdx}
+	</select>
+	
+	<select id="rankMovie" resultMap="movieResultSet">
+		SELECT * FROM MOVIE WHERE ROWNUM BETWEEN 1 AND 10 order by MOVIE_LIKE
+	</select>
+	
+	<update id="updateLike" parameterType="Movie">
+		UPDATE MOVIE SET MOVIE_LIKE = #{movieLike} where MOVIE_INDEX = #{movieIdx}
+	</update>
+	
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+ 	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="kr.co.jojo.board.model.dto.Board" alias="Board" />
+		<typeAlias type="kr.co.jojo.comment.model.dto.Comment" alias="Comment" />
+		<typeAlias type="kr.co.jojo.member.model.dto.Member" alias="Member" />
+		<typeAlias type="kr.co.jojo.movie.model.dto.Movie" alias="Movie" />
+		<typeAlias type="kr.co.jojo.review.model.dto.Review" alias="Review" />
+		<typeAlias type="kr.co.jojo.filmo.model.dto.Filmo" alias="Filmo"/>
+		<typeAlias type="kr.co.jojo.staff.model.dto.Staff" alias="Staff"/>
+		
+		<!-- SJ -->
+		<typeAlias type="kr.co.jojo.cart.model.dto.CartDto" alias="cart" />
+		<typeAlias type="kr.co.jojo.cart.model.dto.CartMember" alias="cartMember" />
+		<typeAlias type="kr.co.jojo.cart.model.dto.CartMb" alias="cartMb" />
+		<typeAlias type="kr.co.jojo.cart.model.dto.CartMovie" alias="cartMovie" />
+		<typeAlias type="kr.co.jojo.cart.model.dto.CartMv" alias="cartMv" />
+		
+		<typeAlias type="kr.co.jojo.wish.model.dto.WishDto" alias="wish" />
+		<typeAlias type="kr.co.jojo.wish.model.dto.WishMember" alias="wishMember" />
+		<typeAlias type="kr.co.jojo.wish.model.dto.WishMb" alias="wishMb" />
+		<typeAlias type="kr.co.jojo.wish.model.dto.WishMovie" alias="wishMovie" />
+		<typeAlias type="kr.co.jojo.wish.model.dto.WishMv" alias="wishMv" />
+		
+		<typeAlias type="kr.co.jojo.mymovie.model.dto.MyMovieDto" alias="MyMovie" />
+		<typeAlias type="kr.co.jojo.mymovie.model.dto.MyMovieMember" alias="MyMovieMember" />
+		<typeAlias type="kr.co.jojo.mymovie.model.dto.MyMovieMb" alias="MyMovieMb" />
+		<typeAlias type="kr.co.jojo.mymovie.model.dto.MyMovieMovie" alias="MyMovieMovie" />
+		<typeAlias type="kr.co.jojo.mymovie.model.dto.MyMovieMv" alias="MyMovieMv" />
+	</typeAliases>
+ 	
+	<mappers>
+		<mapper resource="/mappers/board/board-mapper.xml" />
+		<mapper resource="/mappers/comment/comment-mapper.xml" />
+		<mapper resource="/mappers/member/member-mapper.xml" />
+		<mapper resource="/mappers/movie/movie-mapper.xml" />
+		<mapper resource="/mappers/review/review-mapper.xml" />
+		<mapper resource="/mappers/filmo/filmo-mapper.xml"/>
+		<mapper resource="/mappers/staff/staff-mapper.xml"/>
+		
+		<!-- SJ -->
+		<mapper resource="/mappers/cart/cart-mapper.xml"/>
+		<mapper resource="/mappers/wish/wish-mapper.xml"/>
+		<mapper resource="/mappers/mymovie/mymovie-mapper.xml"/>
+	</mappers>
+
+</configuration>

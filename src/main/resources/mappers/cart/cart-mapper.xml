@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cartMapper">
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM cart
+	</select>
+
+
+	<!-- DTO랑 같음, 근데 얘는 db컬럼이랑 dto맞춰주는거 -->
+	<resultMap type="cartMember" id="memberResultSet">
+		<result column="MEMBER_NAME" property="member_name"></result>
+		<result column="MEMBER_EMAIL" property="member_email"></result>
+		<result column="MEMBER_ID" property="member_id"></result>
+	</resultMap>
+
+	<resultMap type="Cart" id="cartResultSet">
+
+		<result column="MOVIE_INDEX" property="movie_index"></result>
+		<result column="MEMBER_INDEX" property="member_index"></result>
+	</resultMap>
+
+	<resultMap type="cartMovie" id="movieResultSet">
+		<result column="MOVIE_INDEX" property="movie_index"></result>
+		<result column="MOVIE_TITLE" property="movie_title"></result>
+		<result column="MOVIE_UPLOAD_ORIGIN_NAME"
+			property="movie_upload_origin_name"></result>
+		<result column="MOVIE_PRICE" property="movie_price"></result>
+	</resultMap>
+
+	<resultMap type="CartMb" id="cmbResultSet">
+		<collection property="cartMember"
+			resultMap="memberResultSet"></collection>
+		<collection property="cart" resultMap="cartResultSet"></collection>
+	</resultMap>
+
+	<resultMap type="CartMv" id="cmvResultSet">
+		<collection property="cart" resultMap="cartResultSet"></collection>
+		<collection property="cartMovie" resultMap="movieResultSet"></collection>
+	</resultMap>
+
+	<select id="selectListCart" resultMap="cmbResultSet">
+		<!-- SELECT * FROM cart WHERE member_index = #{idx} -->
+		SELECT * FROM cart c
+		LEFT JOIN MEMBER m1 ON c.MEMBER_INDEX = m1.MEMBER_INDEX
+		WHERE c.member_index = #{idx}
+	</select>
+
+	<select id="detailCart" resultMap="cmvResultSet">
+		SELECT * FROM cart c
+		LEFT JOIN MOVIE m2 ON c.MOVIE_INDEX = m2.MOVIE_INDEX
+		WHERE c.member_index = #{idx}
+	</select>
+
+	<!-- 장바구니 삭제 -->
+	<delete id="deleteCart">
+		DELETE FROM cart
+		WHERE member_index = #{member_index} and movie_index = #{movie_index}
+	</delete>
+
+	<insert id="insertCart">
+		INSERT INTO CART (member_index,movie_index) VALUES
+		(#{member_index},${movie_index})
+	</insert>
+
+	<select id="checkedCart" resultMap="cartResultSet">
+		SELECT * FROM CART
+		WHERE MEMBER_INDEX = #{member_index} and MOVIE_INDEX = #{movie_index}
+	</select>
+
+</mapper>

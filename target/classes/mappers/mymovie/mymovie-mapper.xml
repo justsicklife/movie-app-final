@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="mymovieMapper">
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM
+		mymovie
+	</select>
+
+	<!-- DTO랑 같음, 근데 얘는 db컬럼이랑 dto맞춰주는거 -->
+	<resultMap type="MyMovieMember" id="memberResultSet">
+		<result column="MEMBER_NAME" property="member_name"></result>
+		<result column="MEMBER_EMAIL" property="member_email"></result>
+		<result column="MEMBER_ID" property="member_id"></result>
+	</resultMap>
+
+	<resultMap type="MyMovie" id="mymovieResultSet">
+
+		<result column="MOVIE_INDEX" property="movie_index"></result>
+		<result column="MEMBER_INDEX" property="member_index"></result>
+	</resultMap>
+
+	<resultMap type="MyMovieMovie" id="movieResultSet">
+		<result column="MOVIE_INDEX" property="movie_index"></result>
+		<result column="MOVIE_TITLE" property="movie_title"></result>
+		<result column="MOVIE_UPLOAD_ORIGIN_NAME"
+			property="movie_upload_origin_name"></result>
+		<result column="MOVIE_PRICE" property="movie_price"></result>
+	</resultMap>
+
+	<resultMap type="MyMovieMb" id="cmbResultSet">
+		<collection property="member" resultMap="memberResultSet"></collection>
+		<collection property="mymovie" resultMap="mymovieResultSet"></collection>
+	</resultMap>
+
+	<resultMap type="MyMovieMv" id="cmvResultSet">
+		<collection property="mymovie" resultMap="mymovieResultSet"></collection>
+		<collection property="movie" resultMap="movieResultSet"></collection>
+	</resultMap>
+
+	<select id="selectListMyMovie" resultMap="cmbResultSet">
+		<!-- SELECT * FROM mymovie WHERE member_index = #{idx} -->
+		SELECT * FROM mymovie c
+		LEFT JOIN MEMBER m1 ON c.MEMBER_INDEX =
+		m1.MEMBER_INDEX
+		WHERE c.member_index = #{idx}
+	</select>
+
+	<select id="detailMyMovie" resultMap="cmvResultSet">
+		SELECT * FROM mymovie c
+		LEFT JOIN MOVIE m2 ON c.MOVIE_INDEX = m2.MOVIE_INDEX
+		WHERE
+		c.member_index = #{idx}
+	</select>
+
+	<select id="checkedMyMovie" resultMap="mymovieResultSet">
+		select * FROM mymovie where MOVIE_INDEX = #{movie_index} and MEMBER_INDEX =
+		#{member_index}
+	</select>
+
+	<insert id="insertMyMovie">
+		INSERT INTO mymovie (MOVIE_INDEX,MEMBER_INDEX) VALUES
+		(#{movie_index},#{member_index})
+	</insert>
+</mapper>
